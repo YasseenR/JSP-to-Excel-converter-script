@@ -2,8 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-# URL of the JSP webpage
-url = 'https://tuportal6.temple.edu/html/TEMPLE/apps/bpi/public/newAccessGrid/newAccessGrid.jsp'  # Replace with the actual URL
+# This python script simply converts a specific JSP Table made by another department.
+# This *can* work with any JSP table however, I tailored this script to work with the URL shown below
+# Modify script as needed for your URL
+
+
+
+# URL of the JSP webpage (This should be changed to whatever URL is needed to be swapped.)
+url = 'https://tuportal6.temple.edu/html/TEMPLE/apps/bpi/public/newAccessGrid/newAccessGrid.jsp'  
 
 # Fetch the webpage content
 response = requests.get(url)
@@ -26,11 +32,13 @@ data_rows = table.find_all('tr')[1:]  # Skip the first row (header row)
 for tr in data_rows:
     cells = []
     for td in tr.find_all(['td', 'th']):
-        # Check if the cell contains an element with class "fa fa-times"
+        # Check if the cell contains an element with class "fa fa-times" (Pretty much checking to see if there is an X)
         if td.find(class_="fa fa-times"):
             cells.append("\u2717")
+        # Check if the cell contains an element with class "fa fa-check" (Pretty much checking to see if there is a checkmark)
         elif td.find(class_="fa fa-check"):
             cells.append("\u2713")
+        # If no X or Checkmark, just copy the text inside and insert into array.
         else:
             cells.append(td.text.strip())
     rows.append(cells)
